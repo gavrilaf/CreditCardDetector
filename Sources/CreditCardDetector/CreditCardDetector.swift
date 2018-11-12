@@ -21,7 +21,7 @@ struct CreditCardDetector: Collection {
     
     init(with text: String) {
         self.text = text
-        self.matches = CreditCardDetector.cardPattern.matches(in: text, options: [], range: NSRange(location: 0, length: text.utf16.count))
+        self.matches = CreditCardDetector.cardPattern.matches(in: text, options: [], range: text.nsrange)
     }
     
     var startIndex: Int { return matches.startIndex }
@@ -34,9 +34,7 @@ struct CreditCardDetector: Collection {
     
     subscript(position: Int) -> CreditCardPosition {
         let match = matches[position]
-        let substr = text[match.range]! // Force unwrapping is safe here
-        
-        return CreditCardPosition(substr, matches[position])
+        return CreditCardPosition(text[match.range], match)
     }
     
     // MARK: -

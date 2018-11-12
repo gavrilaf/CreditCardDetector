@@ -1,16 +1,13 @@
 import XCTest
 @testable import CreditCardDetector
 
-let textNoCardCard = ["", "Simple text", "Text with 11234 numbers"]
-
-
-let textSingleCard = ["This is Visa: 4485679678967628",
-                      "This is Visa with -: 4485-6796-7896-7628",
-                      "This is Mastercard: 5567008565655260"]
-
 final class CreditCardDetectorTests: XCTestCase {
     
     func testSingleCard() {
+        let textSingleCard = ["This is Visa: 4485679678967628",
+                              "This is Visa with -: 4485-6796-7896-7628",
+                              "This is Mastercard: 5567008565655260"]
+
         textSingleCard.forEach {
             let detector = CreditCardDetector(with: $0)
             XCTAssertFalse(detector.isEmpty, "Should find card pattern in \($0)")
@@ -18,6 +15,8 @@ final class CreditCardDetectorTests: XCTestCase {
     }
     
     func testNoCard() {
+        let textNoCardCard = ["", "Simple text", "Text with 11234 numbers"]
+        
         textNoCardCard.forEach {
             let detector = CreditCardDetector(with: $0)
             XCTAssertTrue(detector.isEmpty, "Should not find card pattern in \($0)")
@@ -62,7 +61,6 @@ final class CreditCardDetectorTests: XCTestCase {
         }
     }
 
-    
     static var allTests = [
         ("testSingleCard", testSingleCard),
         ("testNoCard", testNoCard),
