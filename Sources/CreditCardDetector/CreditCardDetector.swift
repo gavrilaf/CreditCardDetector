@@ -38,7 +38,7 @@ struct CreditCardDetector: Collection {
     }
     
     // MARK: -
-    static private let cardPattern = try! NSRegularExpression(pattern: "\\b(?:\\d[ -]*?){13,16}\\b")
+    static private let cardPattern = try! NSRegularExpression(pattern: "(?:\\d[ -]*?){13,16}")
     
     private let text: String
     private let matches: [NSTextCheckingResult]

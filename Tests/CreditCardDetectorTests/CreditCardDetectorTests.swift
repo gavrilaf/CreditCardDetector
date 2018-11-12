@@ -60,11 +60,46 @@ final class CreditCardDetectorTests: XCTestCase {
             XCTAssertEqual($0.1, processed)
         }
     }
+    
+    func testReplaceForAllCardTypes() {
+        let rawText = """
+            This is Visa: 4485679678967628,
+            MasterCard5111675855423582 and MasterCardAgain - 51216-087021   -59677,
+            Visa 13 digits 4539875198593,
+            AE 3766-002-0011-5411
+            and just numbers 1111111111111111
+            Dinenrs club: 30263 682 060 726
+            JBC 3527531644188130
+            and numbers again 16-04-1978 24-01-1989
+        """
+        
+        let expectedText = """
+            This is Visa: ****,
+            MasterCard**** and MasterCardAgain - ****,
+            Visa 13 digits ****,
+            AE ****
+            and just numbers 1111111111111111
+            Dinenrs club: ****
+            JBC ****
+            and numbers again 16-04-1978 24-01-1989
+        """
+
+        let detector = CreditCardDetector(with: rawText)
+        let processed = detector.replaced { (card) -> String? in
+            if card.number.isValid {
+                return "****"
+            }
+            return nil
+        }
+        
+        XCTAssertEqual(expectedText, processed)
+    }
 
     static var allTests = [
         ("testSingleCard", testSingleCard),
         ("testNoCard", testNoCard),
         ("testReplaced", testReplaced),
         ("testReplaceUsingGenerator", testReplaceUsingGenerator),
+        ("testReplaceForAllCardTypes", testReplaceForAllCardTypes)
     ]
 }
