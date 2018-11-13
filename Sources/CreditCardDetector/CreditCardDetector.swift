@@ -19,9 +19,16 @@ struct CreditCardDetector: Collection {
     typealias Element = CreditCardPosition
     typealias Index = Int
     
-    init(with text: String) {
+    enum SearchOptions {
+        case paranoid
+        case wordBounds
+    }
+    
+    init(with text: String, options: SearchOptions = .paranoid) {
         self.text = text
-        self.matches = CreditCardDetector.cardPattern.matches(in: text, options: [], range: text.nsrange)
+        
+        let pattern = options == .paranoid ? CreditCardDetector.patternParanoid : CreditCardDetector.patternWordBounds
+        self.matches = pattern.matches(in: text, options: [], range: text.nsrange)
     }
     
     var startIndex: Int { return matches.startIndex }
@@ -38,7 +45,8 @@ struct CreditCardDetector: Collection {
     }
     
     // MARK: -
-    static private let cardPattern = try! NSRegularExpression(pattern: "(?:\\d[ -]*?){13,16}")
+    static private let patternParanoid = try! NSRegularExpression(pattern: "(?:\\d[ -]*?){13,16}")
+    static private let patternWordBounds = try! NSRegularExpression(pattern: "\\b(?:\\d[ -]*?){13,16}\\b")
     
     private let text: String
     private let matches: [NSTextCheckingResult]

@@ -3,14 +3,15 @@ import XCTest
 
 final class CreditCardDetectorTests: XCTestCase {
     
-    func testSingleCard() {
+    func testSingleCardSearch() {
         let textSingleCard = ["This is Visa: 4485679678967628",
                               "This is Visa with -: 4485-6796-7896-7628",
-                              "This is Mastercard: 5567008565655260"]
+                              "This is Mastercard: 5567008565655260",
+                              "amexnobounds376600200115411"]
 
         textSingleCard.forEach {
             let detector = CreditCardDetector(with: $0)
-            XCTAssertFalse(detector.isEmpty, "Should find card pattern in \($0)")
+            XCTAssertFalse(detector.isEmpty, "Should found card pattern in \($0)")
         }
     }
     
@@ -19,10 +20,28 @@ final class CreditCardDetectorTests: XCTestCase {
         
         textNoCardCard.forEach {
             let detector = CreditCardDetector(with: $0)
-            XCTAssertTrue(detector.isEmpty, "Should not find card pattern in \($0)")
+            XCTAssertTrue(detector.isEmpty, "Should not found card pattern in \($0)")
         }
     }
     
+    func testSingleCardSearchWithWordBounds() {
+        let textShouldFound = ["This is Visa: 4485679678967628",
+                               "This is Visa with -: 4485-6796-7896-7628",
+                               "This is Mastercard: 5567008565655260"]
+        
+        let textShouldNotFound = ["amexnobounds376600200115411", "This is Visa4485679678967628"]
+        
+        textShouldFound.forEach {
+            let detector = CreditCardDetector(with: $0, options: .wordBounds)
+            XCTAssertFalse(detector.isEmpty, "Should found pattern in \($0)")
+        }
+        
+        textShouldNotFound.forEach {
+            let detector = CreditCardDetector(with: $0, options: .wordBounds)
+            XCTAssertTrue(detector.isEmpty, "Should not found card pattern in \($0)")
+        }
+    }
+
     func testReplaced() {
         let text = "This is Visa: 4485679678967628"
         let expected = "This is Visa: ****"
@@ -96,7 +115,8 @@ final class CreditCardDetectorTests: XCTestCase {
     }
 
     static var allTests = [
-        ("testSingleCard", testSingleCard),
+        ("testSingleCardSearch", testSingleCardSearch),
+        ("testSingleCardSearchWithWordBounds", testSingleCardSearchWithWordBounds),
         ("testNoCard", testNoCard),
         ("testReplaced", testReplaced),
         ("testReplaceUsingGenerator", testReplaceUsingGenerator),
