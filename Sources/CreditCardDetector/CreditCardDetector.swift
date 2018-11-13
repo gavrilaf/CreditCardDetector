@@ -15,31 +15,31 @@ public struct CreditCardPosition {
     fileprivate let match: NSTextCheckingResult
 }
 
-struct CreditCardDetector: Collection {
-    typealias Element = CreditCardPosition
-    typealias Index = Int
+public struct CreditCardDetector: Collection {
+    public typealias Element = CreditCardPosition
+    public typealias Index = Int
     
-    enum SearchOptions {
+    public enum SearchOptions {
         case paranoid
         case wordBounds
     }
     
-    init(with text: String, options: SearchOptions = .paranoid) {
+    public init(with text: String, options: SearchOptions = .paranoid) {
         self.text = text
         
         let pattern = options == .paranoid ? CreditCardDetector.patternParanoid : CreditCardDetector.patternWordBounds
         self.matches = pattern.matches(in: text, options: [], range: text.nsrange)
     }
     
-    var startIndex: Int { return matches.startIndex }
+    public var startIndex: Int { return matches.startIndex }
     
-    var endIndex: Int { return matches.endIndex }
+    public var endIndex: Int { return matches.endIndex }
     
-    func index(after i: Int) -> Int {
+    public func index(after i: Int) -> Int {
         return matches.index(after: i)
     }
     
-    subscript(position: Int) -> CreditCardPosition {
+    public subscript(position: Int) -> CreditCardPosition {
         let match = matches[position]
         return CreditCardPosition(text[match.range], match)
     }

@@ -1,5 +1,5 @@
 import XCTest
-@testable import CreditCardDetector
+import CreditCardDetector
 
 class CreditCardNumberTests: XCTestCase {
     
