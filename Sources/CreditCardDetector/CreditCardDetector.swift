@@ -45,8 +45,8 @@ public struct CreditCardDetector: Collection {
     }
     
     // MARK: -
-    static private let patternParanoid = try! NSRegularExpression(pattern: "(?:\\d[ -]*?){13,16}")
-    static private let patternWordBounds = try! NSRegularExpression(pattern: "\\b(?:\\d[ -]*?){13,16}\\b")
+    static private let patternParanoid = try! NSRegularExpression(pattern: "(?:\\d[ -]*?){13,32}")
+    static private let patternWordBounds = try! NSRegularExpression(pattern: "\\b(?:\\d[ -]*?){13,32}\\b")
     
     private let text: String
     private let matches: [NSTextCheckingResult]

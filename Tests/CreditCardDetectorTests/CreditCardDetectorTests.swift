@@ -80,6 +80,22 @@ final class CreditCardDetectorTests: XCTestCase {
         }
     }
     
+    func testComplexCases() {
+        let cases = [("448567967894485679678967628", "****"),
+                     ("44856796789111111448567967896762", "****"),
+                     ("4485679678911111--14485679678967628", "****--****"),
+                     ("111111111- 37 6600200115411", "****")]
+        
+        cases.forEach {
+            let detector = CreditCardDetector(with: $0.0)
+            let processed = detector.replaced { _ in
+                return "****"
+            }
+            XCTAssertEqual($0.1, processed)
+        }
+    }
+    
+    
     func testReplaceForAllCardTypes() {
         let rawText = """
             This is Visa: 4485679678967628,
@@ -120,6 +136,7 @@ final class CreditCardDetectorTests: XCTestCase {
         ("testNoCard", testNoCard),
         ("testReplaced", testReplaced),
         ("testReplaceUsingGenerator", testReplaceUsingGenerator),
+        ("testComplexCases", testComplexCases),
         ("testReplaceForAllCardTypes", testReplaceForAllCardTypes)
     ]
 }
